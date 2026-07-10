@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sansoon Yacht Survey Pro — Download</title>
+<meta name="description" content="Download Sansoon Yacht Survey Pro, offline field software for professional vessel inspections.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink: #0E2233;
+    --ink-deep: #081420;
+    --paper: #F2EFE6;
+    --paper-line: #d8d2c0;
+    --brass: #C6963C;
+    --brass-dark: #A67B2E;
+    --brass-light: #E4C384;
+    --teal-line: #3E6B6B;
+    --slate: #92A4B3;
+    --white: #FBFAF7;
+    --ok: #4C7A5E;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* Bathymetric contour-line backdrop */
+  .chart-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    opacity:0.35;
+    pointer-events:none;
+  }
+  .chart-bg svg{ width:100%; height:100%; }
+
+  .page{
+    position:relative;
+    z-index:1;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 48px 20px;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color: var(--brass-light);
+    margin-bottom:18px;
+    text-align:center;
+  }
+
+  .eyebrow span{ color: var(--slate); }
+
+  /* The report card */
+  .report{
+    background: var(--paper);
+    color: var(--ink-deep);
+    width:100%;
+    max-width:640px;
+    border-radius:6px;
+    position:relative;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.55),
+      0 2px 0 rgba(255,255,255,0.04) inset;
+    padding: 40px 40px 36px;
+    animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(18px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* perforated edge illusion top */
+  .report::before{
+    content:"";
+    position:absolute;
+    top:-1px; left:24px; right:24px;
+    height:2px;
+    background-image: linear-gradient(to right, var(--paper-line) 50%, transparent 0%);
+    background-size: 14px 2px;
+    background-repeat: repeat-x;
+  }
+
+  .report-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    border-bottom: 1.5px solid var(--ink-deep);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    gap: 20px;
+  }
+
+  .report-id{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:#5b6b74;
+    line-height:1.6;
+  }
+
+  .report-id strong{ color: var(--ink-deep); }
+
+  .seal{
+    flex-shrink:0;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, var(--brass-light), var(--brass) 55%, var(--brass-dark) 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 4px 10px rgba(166,123,46,0.4), inset 0 0 0 3px rgba(255,255,255,0.25);
+  }
+  .seal svg{ width:26px; height:26px; }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin-bottom:10px;
+  }
+
+  .tagline{
+    font-size:15px;
+    color:#42525c;
+    max-width:44ch;
+    line-height:1.55;
+    margin-bottom:26px;
+  }
+
+  .fields{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 24px;
+    margin-bottom: 28px;
+  }
+
+  .field{
+    border-bottom: 1px dashed var(--paper-line);
+    padding-bottom:8px;
+  }
+
+  .field-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:#8a7f66;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .field-value{
+    font-size:14px;
+    font-weight:500;
+    color: var(--ink-deep);
+  }
+
+  .field-value.status{
+    color: var(--ok);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .field-value.status::before{
+    content:"";
+    width:7px; height:7px;
+    border-radius:50%;
+    background: var(--ok);
+    display:inline-block;
+  }
+
+  .cta{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .download-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    background: linear-gradient(180deg, var(--brass-light), var(--brass) 60%, var(--brass-dark));
+    color: var(--ink-deep);
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:17px;
+    text-decoration:none;
+    padding:17px 24px;
+    border-radius:8px;
+    box-shadow: 0 10px 24px -8px rgba(166,123,46,0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .download-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -8px rgba(166,123,46,0.65), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .download-btn:active{
+    transform: translateY(0px);
+  }
+
+  .download-btn svg{ width:20px; height:20px; flex-shrink:0; }
+
+  .meta-row{
+    display:flex;
+    justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:#8a95a0;
+    padding: 0 2px;
+  }
+
+  .report-foot{
+    margin-top:26px;
+    padding-top:16px;
+    border-top: 1px solid var(--paper-line);
+    font-size:12px;
+    color:#6b7680;
+    line-height:1.6;
+  }
+
+  .report-foot a{ color: var(--teal-line); font-weight:600; text-decoration:none; }
+  .report-foot a:hover{ text-decoration:underline; }
+
+  footer{
+    margin-top:28px;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.05em;
+    color: var(--slate);
+  }
+
+  @media (max-width: 480px){
+    .report{ padding: 30px 24px 28px; }
+    .fields{ grid-template-columns: 1fr; }
+    .report-head{ flex-direction:row; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .report{ animation:none; }
+    .download-btn{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chart-bg" aria-hidden="true">
+  <svg viewBox="0 0 1200 900" preserveAspectRatio="none">
+    <g fill="none" stroke="#3E6B6B" stroke-width="1">
+      <path d="M -50 120 Q 300 60, 600 140 T 1250 100" opacity="0.5"/>
+      <path d="M -50 220 Q 320 150, 620 230 T 1250 190" opacity="0.45"/>
+      <path d="M -50 340 Q 340 260, 640 350 T 1250 300" opacity="0.4"/>
+      <path d="M -50 470 Q 300 400, 600 480 T 1250 430" opacity="0.35"/>
+      <path d="M -50 600 Q 320 540, 620 610 T 1250 560" opacity="0.3"/>
+      <path d="M -50 730 Q 340 670, 640 740 T 1250 700" opacity="0.25"/>
+      <path d="M -50 850 Q 300 800, 600 850 T 1250 820" opacity="0.2"/>
+    </g>
+  </svg>
+</div>
+
+<div class="page">
+
+  <div class="eyebrow">Marine Survey Software <span>&mdash;</span> Field Edition</div>
+
+  <div class="report">
+    <div class="report-head">
+      <div class="report-id">
+        REPORT NO. <strong>SYS&#8209;2026&#8209;001</strong><br>
+        ISSUED &mdash; <strong id="issue-date">10 JUL 2026</strong><br>
+        DISTRIBUTION &mdash; <strong>PRIVATE</strong>
+      </div>
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 15 L4 9 L12 4 L20 9 L20 15" stroke="#0E2233" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M2 15 Q12 20 22 15" stroke="#0E2233" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          <circle cx="12" cy="9.5" r="1.4" fill="#0E2233"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1>Sansoon Yacht Survey Pro</h1>
+    <p class="tagline">
+      Professional vessel inspection software for offline field use &mdash;
+      checklists, photo documentation, and report generation, built for surveyors who work where the signal doesn't reach.
+    </p>
+
+    <div class="fields">
+      <div class="field">
+        <span class="field-label">Vessel Type</span>
+        <span class="field-value">Desktop Application (Windows)</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Status</span>
+        <span class="field-value status">Ready for Deployment</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Installation</span>
+        <span class="field-value">Single-file Setup.exe</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Connectivity</span>
+        <span class="field-value">Fully Offline After Install</span>
+      </div>
+    </div>
+
+    <div class="cta">
+      <!-- 
+        IMPORTANT: replace the href below with your real GitHub Release asset URL, e.g.
+        https://github.com/YOUR-USERNAME/YOUR-REPO/releases/download/v1.0.0/Setup.exe
+      -->
+      <a class="download-btn" href="https://github.com/Alialbarg000/sansoon-survey-download/releases/download/v1.0.0/Setup.exe
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12"/>
+          <path d="M7 10l5 5 5-5"/>
+          <path d="M5 21h14"/>
+        </svg>
+        Download for Windows
+      </a>
+      <div class="meta-row">
+        <span>SETUP.EXE</span>
+        <span id="version-tag">v1.0.0</span>
+      </div>
+    </div>
+
+    <div class="report-foot">
+      Signed and distributed via <a href="#" id="repo-link">GitHub Releases</a>. Windows may show a SmartScreen notice for unsigned software &mdash; select <strong>More info &rarr; Run anyway</strong> to continue.
+    </div>
+  </div>
+
+  <footer>Sansoon Yacht Services &mdash; Marine Survey Pro</footer>
+
+</div>
+
+</body>
+</html>
