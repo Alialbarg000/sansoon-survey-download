@@ -1,8 +1,8 @@
 {
-  "version": "1.1.7",
+  "version": "1.1.8",
   "notes": "Bug fixes and PDF export improvements.",
-  "url": "https://github.com/Alialbarg000/sansoon-survey-download/releases/download/1.1.7/Setup.exe",
-  "sha256": "72523b7d6059da0a4f7f125ae13629d60d6a09e08298e396b79aa6950cbdf7dd",
+  "url": "https://github.com/Alialbarg000/sansoon-survey-download/releases/download/1.1.8/Setup.exe",
+  "sha256": "d9564226fd3bd62ad6e92520951f151c66fdee897fc9e49587e3a366f64372e3",
   "size": 84523008,
   "mandatory": false
 }
