@@ -1,8 +1,8 @@
 {
-  "version": "1.2.26",
+  "version": "1.2.27",
   "notes": "Bug fixes and PDF export improvements.",
-  "url": "https://github.com/Alialbarg000/sansoon-survey-download/releases/download/1.2.26/Setup.exe",
-  "sha256": "287ddc3262f87f19904719d3f4e8b2641484c58b8ae358d7c6fdc29d48beb2a7",
+  "url": "https://github.com/Alialbarg000/sansoon-survey-download/releases/download/1.2.27/Setup.exe",
+  "sha256": "547ac34e7dac64ba1084ed46dc717465bca4b6e08e47497a4a66e0f554228e8d",
   "size": 84523008,
   "mandatory": false
 }
